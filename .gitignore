@@ -1,0 +1,3 @@
+node_modules/
+*.pitwall.json
+.DS_Store

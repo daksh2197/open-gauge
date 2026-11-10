@@ -1,0 +1,60 @@
+:root { --bg: #0d0f12; --panel: #171a1f; --line: #2a2f37; --text: #e9edf2; --muted: #8a94a3; --accent: #ffb020; --hot: #ff4d4d; --ok: #3ddc84; }
+[hidden] { display: none !important; }
+:root[data-theme="day"] { --bg: #f4f5f7; --panel: #ffffff; --line: #d6dae0; --text: #12151a; --muted: #5b6573; --accent: #c77700; --hot: #d01f1f; --ok: #12813f; }
+:root[data-theme="mirror"] { --bg: #000; --panel: #000; --line: #333; --text: #fff; --muted: #bbb; --accent: #ffd400; --hot: #ff3030; --ok: #40ff90; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+button, input, select { font: inherit; color: inherit; }
+button { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; min-height: 48px; cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+button:disabled { opacity: .4; cursor: default; }
+button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+button.on { background: var(--hot); border-color: var(--hot); color: #fff; }
+
+.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.brand { letter-spacing: .04em; }
+.status { color: var(--muted); font-size: 14px; flex: 1; }
+.tabs { display: flex; gap: 6px; }
+.tabs button { min-height: 40px; padding: 8px 12px; }
+
+main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+h2 { font-size: 18px; margin: 8px 0 12px; }
+.note { color: var(--muted); font-size: 14px; }
+.connect, .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.tile { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; min-height: 96px; }
+.tile.big { grid-column: span 2; }
+.tile .label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+.tile .value { font-size: 40px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.tile.big .value { font-size: 72px; }
+.tile.hot .value { color: var(--hot); }
+.meter { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: auto; }
+.meter i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .1s linear; }
+.tile.hot .meter i { background: var(--hot); }
+
+/* Mirror: only the four numbers a rear-view mirror screen has room for, big and wide. */
+:root[data-theme="mirror"] .grid { grid-template-columns: repeat(4, 1fr); }
+:root[data-theme="mirror"] .tile { border: none; }
+:root[data-theme="mirror"] .tile.big { grid-column: auto; }
+:root[data-theme="mirror"] .tile .value, :root[data-theme="mirror"] .tile.big .value { font-size: 56px; }
+:root[data-theme="mirror"] .tile[data-k="intake_c"], :root[data-theme="mirror"] .tile[data-k="load"],
+:root[data-theme="mirror"] .tile[data-k="map_kpa"], :root[data-theme="mirror"] .tile[data-k="thr"] { display: none; }
+
+.list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.list li { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.list li .what { flex: 1 1 220px; }
+.list li button { min-height: 40px; padding: 8px 12px; }
+
+.form { display: grid; gap: 12px; max-width: 520px; }
+.form label { display: grid; gap: 4px; color: var(--muted); font-size: 14px; }
+.form input, .form select { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; min-height: 44px; }
+fieldset { border: 1px solid var(--line); border-radius: 12px; display: grid; gap: 12px; padding: 12px; }
+legend { color: var(--muted); padding: 0 6px; }
+
+@media (max-width: 480px) {
+  main { padding: 12px; }
+  .tile.big .value { font-size: 56px; }
+  .tile .value { font-size: 32px; }
+}
