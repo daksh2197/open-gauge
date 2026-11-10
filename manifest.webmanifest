@@ -1,0 +1,12 @@
+{
+  "name": "Open Gauge",
+  "short_name": "Open Gauge",
+  "description": "Live OBD-II gauges for an old phone or tablet, over a Bluetooth LE ELM327 adapter.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d0f12",
+  "theme_color": "#0d0f12",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
