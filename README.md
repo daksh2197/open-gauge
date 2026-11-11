@@ -2,6 +2,8 @@
 
 Live engine gauges on an old Android phone or tablet. Plug a Bluetooth LE ELM327 adapter into the car's OBD-II port, open Open Gauge in Chrome, and connect. There's nothing to install and no account, and it works with no signal once it has loaded.
 
+**Your drives stay on your device.** Open Gauge has no server. Drives are kept in the browser on your phone and only leave it when you export a file yourself. Every sample drive, screenshot and test file in this repo comes from the made-up demo car, never from a real car, and that is the rule for anything added here.
+
 **Read-only.** Open Gauge only reads from the car. It never writes to the engine computer or any other module. Set it up before you drive and don't touch it while moving. Record laps on a closed track, not a public road.
 
 ## What it does
@@ -40,4 +42,4 @@ node tools/export-demo-session.js > demo.json   # a made-up session from the dem
 
 - Automatic laps from GPS (for now you press Lap at the line).
 - g-forces from the phone's motion sensor. It depends on how the phone is mounted, so it needs a calibration step first.
-- A test on a real car. The protocol code is tested against recorded-style replies and the demo car, not yet an Eclipse.
+- A test on a real car. The protocol code is tested against recorded-style replies and the demo car. A real-car test happens on the driver's own phone, and its data stays there.
