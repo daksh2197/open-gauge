@@ -70,6 +70,12 @@
       </label>
       <label>Redline (RPM) <input name="redline" type="number" min="1000" max="20000" step="100"></label>
       <label>Car <input name="car" maxlength="60"></label>
+      <label>Laps
+        <select name="autoLap">
+          <option value="off">I press Lap each time</option>
+          <option value="on">Automatic from the phone's GPS (press Lap once at the line)</option>
+        </select>
+      </label>
       <fieldset>
         <legend>Track, for Pitwall sessions</legend>
         <label>Track id <input name="trackId" maxlength="60" placeholder="e.g. castrol-raceway-north"></label>

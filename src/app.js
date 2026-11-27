@@ -1,6 +1,7 @@
 import { APP } from './app-info.js';
 import { Elm } from './elm.js';
 import { addSample, markInvalid, markLap, markTag, newDrive, toCsv } from './drive.js';
+import { AutoLap } from './gpslap.js';
 import { buildSession, slug, validateSession } from './session.js';
 import { DEFAULTS, deleteDrive, drives, saveDrive, saveSettings, settings } from './store.js';
 import { DEMO_TRACK, bleAvailable, connectBle, demoTransport } from './transports.js';
@@ -155,7 +156,43 @@ function startRecording() {
   $('btn-rec').textContent = 'Stop recording';
   $('btn-rec').classList.add('on');
   for (const id of ['btn-lap', 'btn-tag', 'btn-invalid']) $(id).disabled = false;
+  startGps();
   recInfo();
+}
+
+// ---- Automatic laps from the phone's GPS (Settings > Laps). Positions are never saved. ----
+
+let gps = null; // { auto, watch, state }
+
+function startGps() {
+  if (cfg.autoLap !== 'on') return;
+  if (!('geolocation' in navigator)) {
+    gps = { auto: null, watch: null, state: 'no GPS in this browser, press Lap each time' };
+    return;
+  }
+  const auto = new AutoLap();
+  gps = { auto, watch: null, state: 'GPS on, press Lap once at the line' };
+  gps.watch = navigator.geolocation.watchPosition(
+    pos => {
+      if (!drive || !gps) return;
+      const age = Math.max(0, (Date.now() - pos.timestamp) / 1000);
+      const t = now() - drive._t0 - age;
+      const crossed = auto.feed({ t, lat: pos.coords.latitude, lon: pos.coords.longitude, accuracy: pos.coords.accuracy });
+      if (auto.line) gps.state = 'GPS laps on';
+      if (crossed !== null) markLap(drive, crossed);
+      recInfo();
+    },
+    () => {
+      if (gps) gps.state = 'GPS not available, press Lap each time';
+      recInfo();
+    },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+}
+
+function stopGps() {
+  if (gps && gps.watch !== null) navigator.geolocation.clearWatch(gps.watch);
+  gps = null;
 }
 
 function stopRecording() {
@@ -164,6 +201,7 @@ function stopRecording() {
   $('btn-rec').textContent = 'Record';
   $('btn-rec').classList.remove('on');
   for (const id of ['btn-lap', 'btn-tag', 'btn-invalid']) $(id).disabled = true;
+  stopGps();
   delete d._t0;
   if (d.samples.length) {
     $('rec-info').textContent = saveDrive(d)
@@ -179,14 +217,20 @@ function recInfo() {
   if (!drive) return;
   const secs = Math.round(now() - drive._t0);
   const laps = Math.max(0, drive.laps.length - 1);
-  $('rec-info').textContent = `Recording ${secs} s · ${laps} lap${laps === 1 ? '' : 's'} · ${drive.tags.length} tag${drive.tags.length === 1 ? '' : 's'}`;
+  $('rec-info').textContent = `Recording ${secs} s · ${laps} lap${laps === 1 ? '' : 's'} · ${drive.tags.length} tag${drive.tags.length === 1 ? '' : 's'}${gps ? ` · ${gps.state}` : ''}`;
 }
 
 $('btn-ble').addEventListener('click', () => connect(false));
 $('btn-demo').addEventListener('click', () => connect(true));
 $('btn-stop').addEventListener('click', disconnect);
 $('btn-rec').addEventListener('click', () => (drive ? stopRecording() : startRecording()));
-$('btn-lap').addEventListener('click', () => drive && markLap(drive, now() - drive._t0) && recInfo());
+$('btn-lap').addEventListener('click', () => {
+  if (!drive) return;
+  const t = now() - drive._t0;
+  // With GPS laps on, the first press also puts the start line here; later presses still count.
+  if (gps && gps.auto && !gps.auto.line) gps.auto.arm(t);
+  if (markLap(drive, t)) recInfo();
+});
 $('btn-tag').addEventListener('click', () => {
   if (!drive) return;
   markTag(drive, now() - drive._t0);

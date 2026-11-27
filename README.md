@@ -13,6 +13,7 @@ Live engine gauges on an old Android phone or tablet. Plug a Bluetooth LE ELM327
 - **Log:** press Record to save a drive. The last 10 drives stay in this browser; export the ones you want to keep.
 - **Replay:** play a saved drive back through the gauges at 1×, 4× or 16×.
 - **Laps and tags:** while recording, press **Lap** each time you cross the start line, **Tag** when something feels off, and **Lap didn't count** after an off or a cut.
+- **Automatic laps from GPS:** turn on *Laps > Automatic* in Settings and press **Lap** once at the line. After that the phone's own GPS marks a lap each time you cross that line in the same direction. Crossings to the side (a pit lane), the wrong way, within 10 s of the last, or from fixes worse than 25 m are ignored. Positions are only used to find the crossing and are never saved or exported. No extra hardware.
 - **Export:** CSV of every reading, or a **Pitwall session** (`pitwall-session/1` JSON) for Pitwall's memory and debrief.
 - **Demo car:** try everything without a car. Every number from it is made up.
 
@@ -34,12 +35,11 @@ The validator in `src/session.js` is the same as Patent Garage's, so a file one 
 
 ```
 npm run serve        # then open http://localhost:8000
-npm test             # node --test, no dependencies
+npm test             # node --test, no dependencies (GPS laps are tested on a made-up circular track)
 node tools/export-demo-session.js > demo.json   # a made-up session from the demo car
 ```
 
 ## Not yet
 
-- Automatic laps from GPS (for now you press Lap at the line).
 - g-forces from the phone's motion sensor. It depends on how the phone is mounted, so it needs a calibration step first.
 - A test on a real car. The protocol code is tested against recorded-style replies and the demo car. A real-car test happens on the driver's own phone, and its data stays there.
