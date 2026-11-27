@@ -11,7 +11,8 @@ export const DEFAULTS = {
   trackId: '',
   trackName: '',
   trackLength: '',
-  weather: 'not recorded'
+  weather: 'not recorded',
+  autoLap: 'off'
 };
 
 function get(key, fallback) {

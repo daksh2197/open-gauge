@@ -1,6 +1,6 @@
 {
   "name": "open-gauge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Live OBD-II gauges for an old phone or tablet over a Bluetooth LE ELM327 adapter. No dependencies; this file only tells Node that the .js files are ES modules.",
   "type": "module",
